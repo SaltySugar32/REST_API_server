@@ -1,7 +1,4 @@
-import sys
-
 from app import jwtManager
-
 from app import app, User, Task
 from flask import jsonify, request
 from flask_jwt_extended import set_access_cookies, jwt_required, current_user
