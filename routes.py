@@ -1,7 +1,13 @@
-from app import jwtManager
+from app import jwtManager, database
 from app import app, User, Task
 from flask import jsonify, request
 from flask_jwt_extended import set_access_cookies, jwt_required, current_user
+
+
+# needed for deployment
+@app.before_first_request
+def create_tables():
+    database.create_all()
 
 
 # home
