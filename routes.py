@@ -107,7 +107,6 @@ def update_todo(id):
         return jsonify('task N' + str(id) + ' UPDATED'), 202
 
 
-# -3 часа, ибо документацию фиг разберешь
 @jwtManager.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
