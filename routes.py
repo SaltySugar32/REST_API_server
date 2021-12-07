@@ -13,7 +13,7 @@ def create_tables():
 # home
 @app.route("/")
 def index():
-    return jsonify('home')
+    return jsonify('SaltySugar REST_API_server')
 
 
 # add user
