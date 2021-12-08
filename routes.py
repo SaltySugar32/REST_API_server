@@ -1,3 +1,5 @@
+import json
+
 from app import jwtManager, database
 from app import app, User, Task
 from flask import jsonify, request
@@ -17,7 +19,7 @@ def index():
 
 
 # add user
-@app.route('/user', methods=['POST'])
+@app.route('/user/', methods=['POST'])
 def add_user():
     queryBody = request.form
     if 'username' not in queryBody or 'password' not in queryBody:
@@ -39,19 +41,18 @@ def add_user():
 
 
 # get tasks
-@app.route('/todo')
+@app.route('/todo/')
 @jwt_required()
 def get_todo():
     tasks = current_user.tasks
-    response = {'username': current_user.username}
-    for task in tasks:
-        upd = {f'task №: {task.id}': f'descr: {task.description}'}
-        response.update(upd)
+    response = json.dumps([
+        dict({"id":task.id, "description":task.description}) for task in tasks
+    ])
     return response, 200
 
 
 # add task
-@app.route('/todo', methods=['POST'])
+@app.route('/todo/', methods=['POST'])
 @jwt_required()
 def add_todo():
     query_body = request.form
