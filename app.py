@@ -9,7 +9,6 @@ app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
 
-
 class User(database.Model, UserMixin):
     __tablename__ = "users"
     id = database.Column(database.Integer, primary_key=True)

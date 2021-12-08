@@ -1,8 +1,6 @@
-from app import app, database
+from app import app
 import config
 import routes
 
 if __name__ == '__main__':
-    database.create_all()
     app.run(host='0.0.0.0')
-
