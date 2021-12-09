@@ -1,14 +1,14 @@
-#Лабораторная работа №1. Реализация простого Rest API с использованием фреймворка 
+# Лабораторная работа №1. Реализация простого Rest API с использованием фреймворка 
 
 ## Регистрация USER
-![](./Testing/Registration.png)
+![](test_imgs/user_todo/Registration.png)
 ## Добавление TODO
-![](./Testing/AddTask.png)
+![](test_imgs/user_todo/AddTask.png)
 ## Вывод списка TODO
-![](./Testing/ShowTasks.png)
+![](test_imgs/user_todo/ShowTasks.png)
 ## Удаление TODO
-![](./Testing/DeleteTask.png)
+![](test_imgs/user_todo/DeleteTask.png)
 ## Изменение TODO
-![](./Testing/UpdateTask.png)
+![](test_imgs/user_todo/UpdateTask.png)
 ## Вывод списка TODO
-![](./Testing/Final.png)
+![](test_imgs/user_todo/Final.png)
