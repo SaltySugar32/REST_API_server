@@ -9,6 +9,7 @@ app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
 
+
 class User(database.Model, UserMixin):
     __tablename__ = "users"
     id = database.Column(database.Integer, primary_key=True)
@@ -21,8 +22,9 @@ class User(database.Model, UserMixin):
 
     def __repr__(self):
         return '<User id: {}, username: {}, password: {}>'.format(self.id, self.username, self.password)
+
     @classmethod
-    def authenticate(cls, username, password):
+    def auth(cls, username, password):
         user = cls.query.filter(cls.username == username).first()
         if user is None:
             return 0
@@ -31,25 +33,25 @@ class User(database.Model, UserMixin):
         return user
 
     def get_token(self, expire_time=24):
-        expireDelta = timedelta(expire_time)
-        token = create_access_token(identity=self.username, expires_delta=expireDelta)
+        expire_delta = timedelta(expire_time)
+        token = create_access_token(identity=self.username, expires_delta=expire_delta)
         return token
 
     def save_in_database(self):
         database.session.add(self)
         database.session.commit()
-        return 'User added ' + self.username
+        return 'New user registered: ' + self.username
 
 
-class Task(database.Model):
-    __tablename__ = "tasks"
+class Todo(database.Model):
+    __tablename__ = "todos"
     id = database.Column(database.Integer, primary_key=True)
     description = database.Column(database.Text)
     user_id = database.Column(database.Integer, database.ForeignKey('users.id'))
     user = database.relationship("User", backref="tasks")
 
     def __init__(self, *args, **kwargs):
-        super(Task, self).__init__(*args, **kwargs)
+        super(Todo, self).__init__(*args, **kwargs)
 
     def __repr__(self):
         return '<TODO id: {}, description: {}, user id: {}>'.format(self.id, self.description, self.user_id)
@@ -63,5 +65,3 @@ class Task(database.Model):
         database.session.delete(self)
         database.session.commit()
         return 1
-
-
