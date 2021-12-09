@@ -1,4 +1,5 @@
-# Лабораторная работа №1. Реализация простого Rest API с использованием фреймворка 
+# REST API server (w/ File Storage)
+REST API client https://github.com/SaltySugar32/REST_API_client
 
 ## Регистрация USER
 ![](test_imgs/user_todo/Registration.png)
