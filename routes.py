@@ -158,6 +158,8 @@ def post_files():
 @jwt_required()
 def get_files():
     user_path = os.path.join(app.config['UPLOAD_FOLDER'], current_user.username + '/')
+    if not os.path.exists(user_path):
+        os.makedirs(user_path)
     files_list = os.listdir(user_path)
     files = {}
     response = json.dumps([
