@@ -1,3 +1,4 @@
+""" API routes """
 import json
 import os
 
@@ -9,21 +10,21 @@ from flask import jsonify, request, send_from_directory
 from flask_jwt_extended import set_access_cookies, jwt_required, current_user
 
 
-# needed for deployment
 @app.before_first_request
 def create_tables():
+    """ create tables """
     database.create_all()
 
 
-# home
 @app.route("/")
 def index():
+    """ home """
     return jsonify('SaltySugar REST_API_server')
 
 
-# add user
 @app.route('/user/', methods=['POST'])
 def add_user():
+    """ add user """
     query_body = request.form
     if 'username' not in query_body or 'password' not in query_body:
         return jsonify('Invalid request. Parameters missing.'), 422
@@ -36,7 +37,7 @@ def add_user():
         set_access_cookies(response, access_token)
         return response, 201
 
-    elif user == 1:
+    if user == 1:
         return jsonify('Invalid credentials.'), 401
 
     access_token = user.get_token()
@@ -45,10 +46,10 @@ def add_user():
     return response, 200
 
 
-# get tasks
 @app.route('/todo/')
 @jwt_required()
 def get_todo():
+    """ get tasks """
     tasks = current_user.tasks
     response = json.dumps([
         dict({
@@ -59,10 +60,10 @@ def get_todo():
     return response, 200
 
 
-# add task
 @app.route('/todo/', methods=['POST'])
 @jwt_required()
 def add_todo():
+    """ add task """
     query_body = request.form
     if "description" not in query_body:
         return jsonify('Invalid request. Parameters missing.'), 422
@@ -74,14 +75,14 @@ def add_todo():
     return jsonify('New TODO added: ' + str(task.id)), 201
 
 
-# delete task
-@app.route('/todo/<int:id>', methods=['DELETE'])
+@app.route('/todo/<int:task_id>', methods=['DELETE'])
 @jwt_required()
-def delete_todo(id):
-    if id <= 0:
+def delete_todo(task_id):
+    """ delete task """
+    if task_id <= 0:
         return jsonify('Invalid request. Parameters missing.'), 422
 
-    task = Todo.query.filter(Todo.id == id).first()
+    task = Todo.query.filter(Todo.id == task_id).first()
 
     if task is None:
         return jsonify('TODO not found.'), 404
@@ -95,10 +96,10 @@ def delete_todo(id):
     return jsonify('TODO deleted'), 200
 
 
-# update task
 @app.route('/todo/<int:id>', methods=['PUT'])
 @jwt_required()
 def put_todo(id):
+    """ update task """
     query_body = request.form
     if id <= 0 or 'description' not in query_body:
         return jsonify('Invalid request. Parameters missing.'), 422
@@ -119,6 +120,7 @@ def put_todo(id):
 
 @jwtManager.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
+    """ idk, it doesnt work without this """
     identity = jwt_data["sub"]
     return User.query.filter_by(username=identity).one_or_none()
 
@@ -131,6 +133,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 
 def check_extension(filename: str):
+    """ check supported file extension"""
     extensions = ('.txt', '.png', '.jpg')
     return filename.endswith(extensions)
 
@@ -138,6 +141,7 @@ def check_extension(filename: str):
 @app.route('/files/', methods=['POST'])
 @jwt_required()
 def post_files():
+    """ post files """
     if 'file' not in request.files:
         return jsonify('Invalid request. Parameters missing.'), 422
 
@@ -175,6 +179,7 @@ def get_files():
 @app.route("/files/<string:name>", methods=['GET'])
 @jwt_required()
 def download_file(name):
+    """ download file """
     user_path = os.path.join(app.config['UPLOAD_FOLDER'], current_user.username + '/')
     files_list = os.listdir(user_path)
     if name not in files_list:
@@ -186,6 +191,7 @@ def download_file(name):
 @app.route("/files/<string:name>", methods=['DELETE'])
 @jwt_required()
 def delete_file(name):
+    """ delete file """
     user_path = os.path.join(app.config['UPLOAD_FOLDER'], current_user.username + '/')
     if not os.path.exists(user_path + name):
         return jsonify('File not found.'), 404

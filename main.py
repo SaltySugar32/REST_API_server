@@ -1,5 +1,5 @@
+""" Entry point """
 from app import app
-import config
 import routes
 
 if __name__ == '__main__':
