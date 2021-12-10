@@ -1,4 +1,5 @@
 from datetime import timedelta
+from config import Configuration
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -8,6 +9,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = Configuration['SQLALCHEMY_DATABASE_URI']
+app.config['UPLOAD_FOLDER'] = Configuration['UPLOAD_FOLDER']
+app.config["SECRET_KEY"] = Configuration["SECRET_KEY"]
 
 
 class User(database.Model, UserMixin):
