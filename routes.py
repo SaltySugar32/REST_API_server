@@ -3,11 +3,12 @@ import json
 import os
 
 from werkzeug.utils import secure_filename
+from flask import jsonify, request, send_from_directory
+from flask_jwt_extended import set_access_cookies, jwt_required, current_user
 
 from app import jwtManager, database
 from app import app, User, Todo
-from flask import jsonify, request, send_from_directory
-from flask_jwt_extended import set_access_cookies, jwt_required, current_user
+
 
 
 @app.before_first_request
@@ -96,15 +97,15 @@ def delete_todo(task_id):
     return jsonify('TODO deleted'), 200
 
 
-@app.route('/todo/<int:id>', methods=['PUT'])
+@app.route('/todo/<int:task_id>', methods=['PUT'])
 @jwt_required()
-def put_todo(id):
+def put_todo(task_id):
     """ update task """
     query_body = request.form
-    if id <= 0 or 'description' not in query_body:
+    if task_id <= 0 or 'description' not in query_body:
         return jsonify('Invalid request. Parameters missing.'), 422
 
-    task = Todo.query.filter(Todo.id == id).first()
+    task = Todo.query.filter(Todo.id == task_id).first()
     user_id = current_user.id
     if task.user_id != user_id:
         return jsonify('Missing permissions.'), 401
@@ -112,10 +113,9 @@ def put_todo(id):
     if task is None:
         return jsonify('TODO not found.'), 404
 
-    else:
-        task.description = query_body['description']
-        task.save_in_database()
-        return jsonify('TODO updated.'), 200
+    task.description = query_body['description']
+    task.save_in_database()
+    return jsonify('TODO updated.'), 200
 
 
 @jwtManager.user_lookup_loader
@@ -161,11 +161,11 @@ def post_files():
 @app.route('/files/', methods=['GET'])
 @jwt_required()
 def get_files():
+    """ get files """
     user_path = os.path.join(app.config['UPLOAD_FOLDER'], current_user.username + '/')
     if not os.path.exists(user_path):
         os.makedirs(user_path)
     files_list = os.listdir(user_path)
-    files = {}
     response = json.dumps([
         dict({
             "file": str(file),

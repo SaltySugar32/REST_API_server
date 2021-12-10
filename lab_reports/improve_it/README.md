@@ -5,4 +5,24 @@ offers simple refactoring suggestions.
 
 ---
 
-### 
+## main.py
+- ### Before
+![](MainBefore.png)
+- ### After
+![](MainAfter.png)
+
+---
+
+## app.py
+- ### Before
+![](AppBefore.png)
+- ### After
+![](AppAfter.png)
+
+---
+
+## routes.py
+- ### Before
+![](RoutesBefore.png)
+- ### After
+![](RoutesAfter.png)
