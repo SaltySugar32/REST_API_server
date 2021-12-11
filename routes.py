@@ -23,6 +23,12 @@ def index():
     return jsonify('SaltySugar REST_API_server')
 
 
+@app.route("/health/")
+def get_env():
+    """ get env """
+    return jsonify({"ENV": os.environ['FLASK_ENV']})
+
+
 @app.route('/user/', methods=['POST'])
 def add_user():
     """ add user """

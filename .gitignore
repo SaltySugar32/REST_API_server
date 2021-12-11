@@ -2,4 +2,5 @@
 venv/
 config.py
 data/
+data-prod/
 __pycache__/

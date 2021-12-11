@@ -1,20 +1,24 @@
 """ File with app configs and db """
+import os
 from datetime import timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from flask_jwt_extended import JWTManager, create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import Configuration
+from dotenv import load_dotenv
+import config
 
 
 app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = Configuration['SQLALCHEMY_DATABASE_URI']
-app.config['UPLOAD_FOLDER'] = Configuration['UPLOAD_FOLDER']
-app.config["SECRET_KEY"] = Configuration["SECRET_KEY"]
+load_dotenv()
+if os.environ["FLASK_ENV"] == "prod":
+    app.config.from_object(config.ProdConfig)
+else:
+    app.config.from_object(config.DevConfig)
 
 
 class User(database.Model, UserMixin):
