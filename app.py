@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from flask_jwt_extended import JWTManager, create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 import config
 
 
@@ -13,6 +14,7 @@ app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
 
+load_dotenv()
 if os.environ["FLASK_ENV"] == "prod":
     app.config.from_object(config.ProdConfig)
 else:
