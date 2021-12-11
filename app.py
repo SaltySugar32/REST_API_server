@@ -13,7 +13,7 @@ app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
 
-if os.environ.get("FLASK_ENV") == "prod":
+if os.environ["FLASK_ENV"] == "prod":
     app.config.from_object(config.ProdConfig)
 else:
     app.config.from_object(config.DevConfig)
