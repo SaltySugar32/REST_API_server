@@ -1,3 +1,3 @@
 git commit -a -m "deploy dev"
-git push
+git push master
 sh update_dev.sh
