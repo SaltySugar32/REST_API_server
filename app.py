@@ -70,7 +70,7 @@ class Todo(database.Model):
         super(Todo, self).__init__(*args, **kwargs)
 
     def __repr__(self):
-        return '<TODO id: {}, description: {}, user id: {}>'.format(self.id, self.description, self.user_id)
+        return f'<TODO id: {self.id}, description: {self.description}, user id: {self.user_id}>'
 
     def save_in_database(self):
         """ save changes in database """

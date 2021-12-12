@@ -5,7 +5,6 @@ import os
 from werkzeug.utils import secure_filename
 from flask import jsonify, request, send_from_directory
 from flask_jwt_extended import set_access_cookies, jwt_required, current_user
-
 from app import jwtManager, database
 from app import app, User, Todo
 
