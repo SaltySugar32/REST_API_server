@@ -4,6 +4,6 @@ import re
 msg = open(sys.argv[1], "r").read()
 if not re.match(r"\[#[0-9]{1,}\]\s", msg):
 	print("-" * 50)
-	print("Commit failed. Invalid commit message")
+	print("Commit failed. Invalid commit message.")
 	print("-" * 50)
 	sys.exit(-1)
