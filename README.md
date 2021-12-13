@@ -8,6 +8,6 @@ REST API client: https://github.com/SaltySugar32/REST_API_client
 
 # Deploy
 
-Microsoft Azure VM with gunicorn
+Microsoft Azure VM (using gunicorn)
  - dev: http://52.168.122.249:5000/
  - prod: http://52.168.122.249:8000/
