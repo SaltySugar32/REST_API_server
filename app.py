@@ -7,18 +7,27 @@ from flask_login import UserMixin
 from flask_jwt_extended import JWTManager, create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
-import config
 
 
 app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
 
-load_dotenv()
-if os.environ["FLASK_ENV"] == "prod":
-    app.config.from_object(config.ProdConfig)
-else:
-    app.config.from_object(config.DevConfig)
+""" Try importing config file """
+try:
+    """ import dev/prod configs from config.py """
+    import config
+    load_dotenv()
+    if os.environ["FLASK_ENV"] == "prod":
+        app.config.from_object(config.ProdConfig)
+    else:
+        app.config.from_object(config.DevConfig)
+
+except ImportError or ModuleNotFoundError:
+    """ placeholders """
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///placeholder_db.db"
+    app.config["UPLOAD_FOLDER"] = ""
+    app.config["SECRET_KEY"] = "placeholder"
 
 
 class User(database.Model, UserMixin):
