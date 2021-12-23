@@ -16,6 +16,7 @@ jwtManager = JWTManager(app)
 """ Try importing config file """
 try:
     """import dev/prod configs from config.py"""
+
     import config
 
     load_dotenv()
@@ -26,11 +27,12 @@ try:
 
 except ImportError or ModuleNotFoundError:
     """placeholders"""
+
     path = "placeholderDir/"
     if not os.path.exists(path):
         os.makedirs(path)
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + path + "placeholder_db.db"
-    app.config["UPLOAD_FOLDER"] = path
+    app.config["UPLOAD_FOLDER"] = path + "files/"
     app.config["SECRET_KEY"] = "placeholder"
 
 
