@@ -9,7 +9,6 @@ class TestFlaskApi(unittest.TestCase):
 
     def test_home(self):
         response = self.app.get("/")
-        print(response.json)
         self.assertEqual(response.json, "SaltySugar REST_API_server")
 
 

@@ -15,8 +15,9 @@ jwtManager = JWTManager(app)
 
 """ Try importing config file """
 try:
-    """ import dev/prod configs from config.py """
+    """import dev/prod configs from config.py"""
     import config
+
     load_dotenv()
     if os.environ["FLASK_ENV"] == "prod":
         app.config.from_object(config.ProdConfig)
@@ -24,14 +25,18 @@ try:
         app.config.from_object(config.DevConfig)
 
 except ImportError or ModuleNotFoundError:
-    """ placeholders """
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///placeholder_db.db"
-    app.config["UPLOAD_FOLDER"] = ""
+    """placeholders"""
+    path = "placeholderDir/"
+    if not os.path.exists(path):
+        os.makedirs(path)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + path + "placeholder_db.db"
+    app.config["UPLOAD_FOLDER"] = path
     app.config["SECRET_KEY"] = "placeholder"
 
 
 class User(database.Model, UserMixin):
-    """ User Model """
+    """User Model"""
+
     __tablename__ = "users"
     id = database.Column(database.Integer, primary_key=True)
     username = database.Column(database.String(20), nullable=False, unique=True)
@@ -39,14 +44,14 @@ class User(database.Model, UserMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.password = generate_password_hash(kwargs['password'])
+        self.password = generate_password_hash(kwargs["password"])
 
     def __repr__(self):
-        return f'<User id: {self.id}, username: {self.username}, password: {self.password}>'
+        return f"<User id: {self.id}, username: {self.username}, password: {self.password}>"
 
     @classmethod
     def auth(cls, username, password):
-        """ authorize user """
+        """authorize user"""
         user = cls.query.filter(cls.username == username).first()
         if user is None:
             return 0
@@ -55,40 +60,41 @@ class User(database.Model, UserMixin):
         return user
 
     def get_token(self, expire_time=24):
-        """ get user token """
+        """get user token"""
         expire_delta = timedelta(expire_time)
         token = create_access_token(identity=self.username, expires_delta=expire_delta)
         return token
 
     def save_in_database(self):
-        """ save changes in database """
+        """save changes in database"""
         database.session.add(self)
         database.session.commit()
-        return 'New user registered: ' + self.username
+        return "New user registered: " + self.username
 
 
 class Todo(database.Model):
-    """ Task Model """
+    """Task Model"""
+
     __tablename__ = "todos"
     id = database.Column(database.Integer, primary_key=True)
     description = database.Column(database.Text)
-    user_id = database.Column(database.Integer, database.ForeignKey('users.id'))
+    user_id = database.Column(database.Integer, database.ForeignKey("users.id"))
     user = database.relationship("User", backref="tasks")
 
     def __init__(self, *args, **kwargs):
         super(Todo, self).__init__(*args, **kwargs)
 
     def __repr__(self):
-        return f'<TODO id: {self.id}, description: {self.description}, user id: {self.user_id}>'
+        return f"<TODO id: {self.id}, description: {self.description}, user id: {self.user_id}>"
 
     def save_in_database(self):
-        """ save changes in database """
+        """save changes in database"""
         database.session.add(self)
         database.session.commit()
         return self.id
 
     def delete_from_database(self):
-        """ save changes in database """
+        """save changes in database"""
         database.session.delete(self)
         database.session.commit()
         return 1

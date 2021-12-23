@@ -5,3 +5,4 @@ data/
 data-prod/
 __pycache__/
 .env
+placeholderDir/
