@@ -14,5 +14,5 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_SECRET_KEY }}
         script: |
-          cd REST_API_server_prod/scripts ||
+          cd REST_API_server_prod/scripts
           sh build.sh
