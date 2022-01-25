@@ -12,14 +12,13 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 database = SQLAlchemy(app)
 jwtManager = JWTManager(app)
+load_dotenv()
 
 """ Try importing config file """
 try:
     """import dev/prod configs from config.py"""
 
     import config
-
-    load_dotenv()
     if os.environ["FLASK_ENV"] == "prod":
         app.config.from_object(config.ProdConfig)
     else:
@@ -28,7 +27,7 @@ try:
 except ImportError or ModuleNotFoundError:
     """placeholders"""
 
-    path = "placeholderDir/"
+    path = "db/"
     if not os.path.exists(path):
         os.makedirs(path)
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + path + "placeholder_db.db"
